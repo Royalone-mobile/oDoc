@@ -1,0 +1,4 @@
+app_identifier "com.oDocsTech.Capture" # The bundle identifier of your app
+apple_id "ophthalmicdocs@gmail.com" # Your Apple email address
+
+team_id "Z43BTSV32T"  # Developer Portal Team ID

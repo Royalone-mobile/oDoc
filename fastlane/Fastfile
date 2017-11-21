@@ -1,0 +1,42 @@
+update_fastlane
+
+fastlane_version "1.104.0"
+
+default_platform :ios
+
+platform :ios do
+  before_all do
+    ENV["SLACK_URL"] = "https://hooks.slack.com/services/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"
+  end
+
+  desc "Submit a new Beta Build to Testflight"
+  lane :beta do
+    match(type:           "appstore",
+          app_identifier: "com.oDocsTech.Capture",
+          readonly:       true)
+
+    build_number    = ENV['BUILD_NUMBER']
+    version_number  = get_version_number(xcodeproj: "./Capture.xcodeproj")
+    change_log      = changelog_from_git_commits
+
+    increment_build_number(build_number: build_number)
+
+    gym(scheme:               "Capture",
+        configuration:        "Release",
+        use_legacy_build_api: true)
+
+    pilot(skip_waiting_for_build_processing: true)
+
+    slack(message: "Build success! Fresh beta build available in Testflight.",
+          payload: {
+            'Version' => "#{version_number} build ##{build_number}",
+            'What\'s new' => change_log,
+          },
+          default_payloads: [],
+          use_webhook_configured_username_and_icon: true,)
+
+    # Tag release and push to GitHub
+    add_git_tag tag: "#{version_number}.#{build_number}"
+    push_git_tags
+  end
+end

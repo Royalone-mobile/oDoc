@@ -1,0 +1,6 @@
+git_url "git@github.com:bitcrank/oDocs-signing.git"
+
+type "development" # The default type, can be: appstore, adhoc or development
+
+app_identifier "com.oDocsTech.Capture" 
+username "ophthalmicdocs@gmail.com" # Your Apple Developer Portal username
